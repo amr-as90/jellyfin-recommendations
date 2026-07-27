@@ -33,10 +33,9 @@ func main() {
 	}
 
 	err = state.GetOrCreatePlaylist(playlistName)
-
-	// Check if we have a recorded playlist ID (Possibly just get this from the ENV variable too)
-
-	// If we don't have a playlist ID, we create a playlist and store it's ID in the playlist ID variable
+	if err != nil {
+		log.Fatal("Something went wrong checking playlists: %w", err)
+	}
 
 	// Get the user favorites and store them in a map
 

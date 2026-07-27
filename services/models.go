@@ -6,8 +6,8 @@ type BaseItem struct {
 	Name string `json:"Name"`
 }
 
-// QueryItemsResponse represents the wrapper returned by GET /Items
-type QueryItemsResponse struct {
+// QueryPlaylistsResponse represents the wrapper returned by GET /Items
+type QueryPlaylistsResponse struct {
 	Items []BaseItem `json:"Items"`
 }
 
