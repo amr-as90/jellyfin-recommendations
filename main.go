@@ -29,11 +29,13 @@ func main() {
 		log.Fatal("Something went wrong during initial sync: %w", err)
 	}
 
-	for {
-		err = state.StartWebSocketListener()
+	ticker := time.NewTicker(time.Minute * 20)
+	defer ticker.Stop()
+
+	for range ticker.C {
+		err = state.Sync()
 		if err != nil {
-			log.Printf("WebSocket disconnected: %v. Retrying in 3 seconds...", err)
-			time.Sleep(3 * time.Second)
+			log.Printf("Something went wrong during sync: %v", err)
 		}
 	}
 

@@ -19,11 +19,6 @@ type queryUserFavoritesResponse struct {
 	Items []baseItem `json:"Items"`
 }
 
-type systemConfiguration struct {
-	UICulture                 string `json:"UICulture"`
-	PreferredMetadataLanguage string `json:"PreferredMetadataLanguage"`
-}
-
 type existingCollectionsResponse struct {
 	Items []struct {
 		ID   string `json:"Id"`
