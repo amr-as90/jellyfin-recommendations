@@ -15,6 +15,7 @@ type StateManager struct {
 	UserCollections map[string]*UserCollectionInfo
 }
 
+// NewStateManager initializes a state manager
 func NewStateManager(serverURL, apiKey string) *StateManager {
 	return &StateManager{
 		ServerURL:     serverURL,

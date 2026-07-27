@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	// Load the API Key from the environment variable
+	// Load the environment variables
 	serverURL := os.Getenv("JELLYFIN_URL")
 	apiKey := os.Getenv("API_KEY")
 
@@ -28,7 +28,7 @@ func main() {
 
 	err = state.Sync()
 	if err != nil {
-		log.Fatal("Something went wrong hydrating favorites: %w", err)
+		log.Fatal("Something went wrong during initial sync: %w", err)
 	}
 
 	// Start a WebSocket listener to handle new user favorites and items removed from user favorites

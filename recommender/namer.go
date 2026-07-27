@@ -7,7 +7,7 @@ type CollectionNamer struct {
 }
 
 // NewCollectionNamerFromState queries Jellyfin for the server UICulture
-// and initializes a CollectionNamer.
+// field (to get the language) and initializes a CollectionNamer.
 func (s *StateManager) NewCollectionNamerFromState() (*CollectionNamer, error) {
 	config, err := getJellyfin[systemConfiguration](s, "/System/Configuration")
 	if err != nil {
@@ -22,6 +22,8 @@ func (s *StateManager) NewCollectionNamerFromState() (*CollectionNamer, error) {
 	return &CollectionNamer{Language: lang}, nil
 }
 
+// FormatName accepts a username and formats the collection name based on the system's language and
+// the user's name. For example, in English, the user 'Amr' would return 'Amr's recommendations'.
 func (cn *CollectionNamer) FormatName(userName string) string {
 	switch cn.Language {
 	case "es":

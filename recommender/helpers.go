@@ -35,8 +35,6 @@ func ValidateServerURL(rawURL string) (normalizedURL string, err error) {
 	return normalized, nil
 }
 
-// GetJellyfin sends an authenticated GET request to the given Jellyfin endpoint
-// and automatically parses the JSON response into type T.
 func getJellyfin[T any](s *StateManager, endpoint string) (T, error) {
 	var result T
 
@@ -69,8 +67,6 @@ func getJellyfin[T any](s *StateManager, endpoint string) (T, error) {
 	return result, nil
 }
 
-// postJellyfin sends an authenticated POST request with an optional JSON body (payload)
-// and unmarshals the JSON response into type T.
 func postJellyfin[T any](s *StateManager, endpoint string, payload any) (T, error) {
 	var result T
 
@@ -121,7 +117,6 @@ func postJellyfin[T any](s *StateManager, endpoint string, payload any) (T, erro
 	return result, nil
 }
 
-// deleteJellyfin sends an authenticated DELETE request to the given endpoint.
 func (s *StateManager) deleteJellyfin(endpoint string) error {
 	reqURL := fmt.Sprintf("%s%s", s.ServerURL, endpoint)
 

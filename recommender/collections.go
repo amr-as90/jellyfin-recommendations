@@ -5,7 +5,6 @@ import (
 	"log"
 )
 
-// reconcileCollections aligns Jellyfin's live BoxSets with in-memory UserFavorites.
 func (s *StateManager) reconcileCollections(users []user) error {
 	existingCollections, err := s.getExistingCollections()
 	if err != nil {
@@ -98,7 +97,6 @@ func (s *StateManager) reconcileCollections(users []user) error {
 	return nil
 }
 
-// getCollectionItemIDs returns a set of item IDs inside a collection.
 func (s *StateManager) getCollectionItemIDs(collectionID string) (map[string]bool, error) {
 	endpoint := fmt.Sprintf("/Items?parentId=%s", collectionID)
 
@@ -115,7 +113,6 @@ func (s *StateManager) getCollectionItemIDs(collectionID string) (map[string]boo
 	return itemSet, nil
 }
 
-// getExistingCollections queries Jellyfin for all existing collections
 func (s *StateManager) getExistingCollections() (map[string]string, error) {
 	endpoint := "/Items?includeItemTypes=BoxSet&recursive=true"
 
@@ -132,8 +129,6 @@ func (s *StateManager) getExistingCollections() (map[string]string, error) {
 	return collections, nil
 }
 
-// createCollection creates a new collection in Jellyfin initialized with a single item ID.
-// Returns the newly created collection ID.
 func (s *StateManager) createCollection(name, initialItemID string) (string, error) {
 	if name == "" || initialItemID == "" {
 		return "", fmt.Errorf("collection name and initialItemID cannot be empty")
@@ -149,7 +144,6 @@ func (s *StateManager) createCollection(name, initialItemID string) (string, err
 	return resp.ID, nil
 }
 
-// addItemToCollection appends a single item to an existing Jellyfin collection.
 func (s *StateManager) addItemToCollection(collectionID, itemID string) error {
 	if collectionID == "" || itemID == "" {
 		return fmt.Errorf("collectionID and itemID cannot be empty")
@@ -165,7 +159,6 @@ func (s *StateManager) addItemToCollection(collectionID, itemID string) error {
 	return nil
 }
 
-// removeItemFromCollection removes an item from an existing Jellyfin collection.
 func (s *StateManager) removeItemFromCollection(collectionID, itemID string) error {
 	if collectionID == "" || itemID == "" {
 		return fmt.Errorf("collectionID and itemID cannot be empty")
