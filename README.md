@@ -26,3 +26,7 @@ docker run -d \
 ```
 
 Replace `{YOUR_JELLYFIN_URL}` and `{YOUR_API_KEY}` with your actual Jellyfin URL and API key.
+
+## Optional Step
+
+There is only one 'Collections' tab in Jellyfin and this is essentially a 'hack' to hijack its functionality to also provide recommendations. If you don't really use collections like I do, you can turn off the 'Group movies and shows into collections' settings in the Jellyfin dashboard, and when 'Jellyfin Recommendations' populates the collections, simply rename it to 'Recommendations', or whatever you prefer, as this can't be done via the API AFAIK.
