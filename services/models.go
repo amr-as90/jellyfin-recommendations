@@ -1,24 +1,18 @@
 package services
 
-// BaseItem represents an item returned from Jellyfin query responses
+// User represents a Jellyfin user account
+type User struct {
+	ID   string `json:"Id"`
+	Name string `json:"Name"`
+}
+
+// BaseItem represents an item in the library (movie, show, etc.,)
 type BaseItem struct {
 	ID   string `json:"Id"`
 	Name string `json:"Name"`
 }
 
-// QueryPlaylistsResponse represents the wrapper returned by GET /Items
-type QueryPlaylistsResponse struct {
+// QueryUserFavoritesResponse represents the payload returned by GET /Users/{userId}/Items
+type QueryUserFavoritesResponse struct {
 	Items []BaseItem `json:"Items"`
-}
-
-// CreatePlaylistRequest represents the payload expected by POST /Playlists
-type CreatePlaylistRequest struct {
-	Name       string   `json:"Name"`
-	OpenAccess bool     `json:"OpenAccess"`
-	ItemIDs    []string `json:"Ids"`
-}
-
-// CreatePlaylistResponse represents the object returned when a playlist is created
-type CreatePlaylistResponse struct {
-	ID string `json:"Id"`
 }
