@@ -26,7 +26,7 @@ func main() {
 		ServerURL: normalizedURL,
 	}
 
-	err = state.HydrateFavorites()
+	err = state.Sync()
 	if err != nil {
 		log.Fatal("Something went wrong hydrating favorites: %w", err)
 	}

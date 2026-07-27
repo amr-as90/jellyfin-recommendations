@@ -9,7 +9,7 @@ type CollectionNamer struct {
 // NewCollectionNamerFromState queries Jellyfin for the server UICulture
 // and initializes a CollectionNamer.
 func (s *StateManager) NewCollectionNamerFromState() (*CollectionNamer, error) {
-	config, err := getJellyfin[SystemConfiguration](s, "/System/Configuration")
+	config, err := getJellyfin[systemConfiguration](s, "/System/Configuration")
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch server configuration: %w", err)
 	}

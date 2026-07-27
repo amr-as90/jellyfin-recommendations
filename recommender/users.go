@@ -35,18 +35,18 @@ func (s *StateManager) hydrateFavorites() error {
 	return nil
 }
 
-func (s *StateManager) getUsers() (users []User, err error) {
-	return getJellyfin[[]User](s, "/Users")
+func (s *StateManager) getUsers() (users []user, err error) {
+	return getJellyfin[[]user](s, "/Users")
 }
 
-func (s *StateManager) getUserFavorites(userID string) ([]BaseItem, error) {
+func (s *StateManager) getUserFavorites(userID string) ([]baseItem, error) {
 	if userID == "" {
 		return nil, fmt.Errorf("received empty userID, cannot be empty")
 	}
 
 	endpoint := fmt.Sprintf("%s/Users/%s/Items?filters=IsFavorite&recursive=true", s.ServerURL, userID)
 
-	resp, err := getJellyfin[QueryUserFavoritesResponse](s, endpoint)
+	resp, err := getJellyfin[queryUserFavoritesResponse](s, endpoint)
 	if err != nil {
 		return nil, err
 	}
