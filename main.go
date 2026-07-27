@@ -5,17 +5,21 @@ import (
 	"os"
 
 	"github.com/amr-as90/jellyfin-recommendations/helpers"
-	"github.com/amr-as90/jellyfin-recommendations/models"
+	"github.com/amr-as90/jellyfin-recommendations/services"
 )
 
 func main() {
 	// Load the API Key from the environment variable
 	serverURL := os.Getenv("JELLYFIN_URL")
 	apiKey := os.Getenv("API_KEY")
-	playlistID := os.Getenv("PLAYLIST_ID")
+	playlistName := os.Getenv("PLAYLIST_NAME")
 
 	if serverURL == "" || apiKey == "" {
 		log.Fatal("A valid Jellyfin URL and API Key are required")
+	}
+
+	if playlistName == "" {
+		playlistName = "Recommendations"
 	}
 
 	normalizedURL, err := helpers.ValidateServerURL(serverURL)
@@ -23,11 +27,12 @@ func main() {
 		log.Fatal("Server URL isn't valid: %w", err)
 	}
 
-	state := &models.StateManager{
-		APIKey:     apiKey,
-		ServerURL:  normalizedURL,
-		PlaylistID: playlistID,
+	state := &services.StateManager{
+		APIKey:    apiKey,
+		ServerURL: normalizedURL,
 	}
+
+	err = state.GetOrCreatePlaylist(playlistName)
 
 	// Check if we have a recorded playlist ID (Possibly just get this from the ENV variable too)
 
