@@ -9,12 +9,12 @@ RUN go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o recommender .
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o /app/jellyfin-recommender-bin main.go
 
 FROM scratch
 
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
-COPY --from=builder /app/recommender /recommender
+COPY --from=builder /app/jellyfin-recommender-bin /jellyfin-recommender
 
-ENTRYPOINT ["/recommender"]
+ENTRYPOINT ["/jellyfin-recommender"]
