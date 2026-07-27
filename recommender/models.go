@@ -34,3 +34,20 @@ type existingCollectionsResponse struct {
 type createCollectionResponse struct {
 	ID string `json:"Id"`
 }
+
+type WSMessage struct {
+	MessageType string          `json:"MessageType"`
+	Data        UserDataChanged `json:"Data"`
+}
+
+type UserDataChanged struct {
+	UserDataList []UserDataChangeItem `json:"UserDataList"`
+}
+
+type UserDataChangeItem struct {
+	UserID string `json:"UserId"`
+	ItemID string `json:"ItemId"`
+	Data   struct {
+		IsFavorite bool `json:"IsFavorite"`
+	} `json:"UserData"`
+}
