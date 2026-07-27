@@ -12,14 +12,9 @@ func main() {
 	// Load the API Key from the environment variable
 	serverURL := os.Getenv("JELLYFIN_URL")
 	apiKey := os.Getenv("API_KEY")
-	playlistName := os.Getenv("PLAYLIST_NAME")
 
 	if serverURL == "" || apiKey == "" {
 		log.Fatal("A valid Jellyfin URL and API Key are required")
-	}
-
-	if playlistName == "" {
-		playlistName = "Recommendations"
 	}
 
 	normalizedURL, err := helpers.ValidateServerURL(serverURL)
@@ -32,9 +27,9 @@ func main() {
 		ServerURL: normalizedURL,
 	}
 
-	err = state.GetOrCreatePlaylist(playlistName)
+	err = state.HydrateFavorites()
 	if err != nil {
-		log.Fatal("Something went wrong checking playlists: %w", err)
+		log.Fatal("Something went wrong hydrating playlists: %w", err)
 	}
 
 	// Get the user favorites and store them in a map
