@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-func (s *StateManager) HydrateFavorites() error {
+func (s *StateManager) hydrateFavorites() error {
 	// Get all users
 	users, err := s.getUsers()
 	if err != nil {
