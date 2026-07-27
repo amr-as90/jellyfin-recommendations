@@ -19,7 +19,7 @@ func (s *StateManager) reconcileCollections(users []user) error {
 	s.UserCollections = make(map[string]*UserCollectionInfo)
 
 	for _, user := range users {
-		expectedName := s.Namer.FormatName(user.Name)
+		expectedName := user.Name
 		collectionID, exists := existingCollections[expectedName]
 
 		// Get all expected item IDs for this user based on their favorites

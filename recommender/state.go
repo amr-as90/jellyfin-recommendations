@@ -12,7 +12,6 @@ type StateManager struct {
 	UserFavorites   map[string]map[string]bool
 	APIKey          string
 	ServerURL       string
-	Namer           *CollectionNamer
 	UserCollections map[string]*UserCollectionInfo
 }
 
@@ -29,13 +28,6 @@ func NewStateManager(serverURL, apiKey string) *StateManager {
 
 // Sync performs initial server setup and state reconciliation
 func (s *StateManager) Sync() error {
-	// Get the language to name the new collections
-	namer, err := s.NewCollectionNamerFromState()
-	if err != nil {
-		// Log warning and fallback to default rather than stopping startup
-		namer = &CollectionNamer{Language: "en"}
-	}
-	s.Namer = namer
 
 	// Get the users from Jellyfin
 	users, err := s.getUsers()

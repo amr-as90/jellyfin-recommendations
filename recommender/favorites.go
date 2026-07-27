@@ -16,7 +16,7 @@ func (s *StateManager) addUserFavorite(userID, userName, itemID string) error {
 
 	// If no collection exists, create it
 	if !exists || len(col.ItemIDs) == 0 {
-		collectionName := s.Namer.FormatName(userName)
+		collectionName := userName
 		colID, err := s.createCollection(collectionName, itemID)
 		if err != nil {
 			return err
