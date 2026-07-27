@@ -28,6 +28,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Something went wrong during initial sync: %w", err)
 	}
+	log.Printf("Initial sync complete")
 
 	ticker := time.NewTicker(time.Minute * 20)
 	defer ticker.Stop()
@@ -36,7 +37,8 @@ func main() {
 		err = state.Sync()
 		if err != nil {
 			log.Printf("Something went wrong during sync: %v", err)
+		} else {
+			log.Printf("Sync complete")
 		}
 	}
-
 }
