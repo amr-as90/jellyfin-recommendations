@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"time"
 
 	"github.com/amr-as90/jellyfin-recommendations/recommender"
 )
@@ -21,15 +22,19 @@ func main() {
 		log.Fatal("Server URL isn't valid: %w", err)
 	}
 
-	state := &recommender.StateManager{
-		APIKey:    apiKey,
-		ServerURL: normalizedURL,
-	}
+	state := recommender.NewStateManager(normalizedURL, apiKey)
 
 	err = state.Sync()
 	if err != nil {
 		log.Fatal("Something went wrong during initial sync: %w", err)
 	}
 
-	// Start a WebSocket listener to handle new user favorites and items removed from user favorites
+	for {
+		err = state.StartWebSocketListener()
+		if err != nil {
+			log.Printf("WebSocket disconnected: %v. Retrying in 3 seconds...", err)
+			time.Sleep(3 * time.Second)
+		}
+	}
+
 }

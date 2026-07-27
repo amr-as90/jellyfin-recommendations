@@ -19,9 +19,11 @@ type StateManager struct {
 // NewStateManager initializes a state manager
 func NewStateManager(serverURL, apiKey string) *StateManager {
 	return &StateManager{
-		ServerURL:     serverURL,
-		APIKey:        apiKey,
-		UserFavorites: make(map[string]map[string]bool),
+		ServerURL:       serverURL,
+		APIKey:          apiKey,
+		UserFavorites:   make(map[string]map[string]bool),
+		Users:           make(map[string]string),
+		UserCollections: make(map[string]*UserCollectionInfo),
 	}
 }
 

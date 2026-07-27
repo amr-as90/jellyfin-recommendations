@@ -38,7 +38,7 @@ func (s *StateManager) getUserFavorites(userID string) ([]baseItem, error) {
 		return nil, fmt.Errorf("received empty userID, cannot be empty")
 	}
 
-	endpoint := fmt.Sprintf("%s/Users/%s/Items?filters=IsFavorite&recursive=true", s.ServerURL, userID)
+	endpoint := fmt.Sprintf("/Users/%s/Items?filters=IsFavorite&recursive=true", userID)
 
 	resp, err := getJellyfin[queryUserFavoritesResponse](s, endpoint)
 	if err != nil {

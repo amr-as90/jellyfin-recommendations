@@ -3,6 +3,7 @@ package recommender
 import (
 	"fmt"
 	"log"
+	"net/url"
 )
 
 func (s *StateManager) reconcileCollections(users []user) error {
@@ -134,7 +135,11 @@ func (s *StateManager) createCollection(name, initialItemID string) (string, err
 		return "", fmt.Errorf("collection name and initialItemID cannot be empty")
 	}
 
-	endpoint := fmt.Sprintf("/Collections?Name=%s&Ids=%s", name, initialItemID)
+	params := url.Values{}
+	params.Set("Name", name)
+	params.Set("Ids", initialItemID)
+
+	endpoint := fmt.Sprintf("/Collections?%s", params.Encode())
 
 	resp, err := postJellyfin[createCollectionResponse](s, endpoint, nil)
 	if err != nil {
@@ -149,7 +154,10 @@ func (s *StateManager) addItemToCollection(collectionID, itemID string) error {
 		return fmt.Errorf("collectionID and itemID cannot be empty")
 	}
 
-	endpoint := fmt.Sprintf("/Collections/%s/Items?Ids=%s", collectionID, itemID)
+	params := url.Values{}
+	params.Set("Ids", itemID)
+
+	endpoint := fmt.Sprintf("/Collections/%s/Items?%s", collectionID, params.Encode())
 
 	_, err := postJellyfin[any](s, endpoint, nil)
 	if err != nil {
