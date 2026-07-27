@@ -4,8 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/amr-as90/jellyfin-recommendations/helpers"
-	"github.com/amr-as90/jellyfin-recommendations/services"
+	"github.com/amr-as90/jellyfin-recommendations/recommender"
 )
 
 func main() {
@@ -17,22 +16,20 @@ func main() {
 		log.Fatal("A valid Jellyfin URL and API Key are required")
 	}
 
-	normalizedURL, err := helpers.ValidateServerURL(serverURL)
+	normalizedURL, err := recommender.ValidateServerURL(serverURL)
 	if err != nil {
 		log.Fatal("Server URL isn't valid: %w", err)
 	}
 
-	state := &services.StateManager{
+	state := &recommender.StateManager{
 		APIKey:    apiKey,
 		ServerURL: normalizedURL,
 	}
 
 	err = state.HydrateFavorites()
 	if err != nil {
-		log.Fatal("Something went wrong hydrating playlists: %w", err)
+		log.Fatal("Something went wrong hydrating favorites: %w", err)
 	}
-
-	// Get the user favorites and store them in a map
 
 	// Check the playlist for user favorites, resolve any discrepancies (both favorites that don't exist, and items that exist which are not favorites)
 

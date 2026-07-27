@@ -1,4 +1,4 @@
-package services
+package recommender
 
 // User represents a Jellyfin user account
 type User struct {
