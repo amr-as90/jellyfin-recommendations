@@ -8,6 +8,7 @@ import (
 
 type StateManager struct {
 	Mu              sync.RWMutex
+	Users           map[string]string
 	UserFavorites   map[string]map[string]bool
 	APIKey          string
 	ServerURL       string
@@ -39,6 +40,13 @@ func (s *StateManager) Sync() error {
 	if err != nil {
 		return fmt.Errorf("failed to get users from Jellyfin: %w", err)
 	}
+
+	// Hydrate user map
+	s.Mu.Lock()
+	for _, user := range users {
+		s.Users[user.ID] = user.Name
+	}
+	s.Mu.Unlock()
 
 	// Hydrate the map of user favorites
 	err = s.hydrateFavorites(users)

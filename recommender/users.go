@@ -47,3 +47,10 @@ func (s *StateManager) getUserFavorites(userID string) ([]baseItem, error) {
 
 	return resp.Items, nil
 }
+
+func (s *StateManager) getUserNameByID(userID string) string {
+	s.Mu.RLock()
+	defer s.Mu.RUnlock()
+
+	return s.Users[userID]
+}

@@ -69,7 +69,7 @@ func (s *StateManager) handleUserDataChanged(data UserDataChanged) {
 				log.Printf("Error adding favorite for %s: %v", userName, err)
 			}
 		} else {
-			log.Printf("User %s UNfavorited item %s", userName, itemID)
+			log.Printf("User %s unfavorited item %s", userName, itemID)
 			if err := s.removeUserFavorite(userID, itemID); err != nil {
 				log.Printf("Error removing favorite for %s: %v", userName, err)
 			}
