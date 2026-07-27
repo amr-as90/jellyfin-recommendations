@@ -5,13 +5,7 @@ import (
 	"log"
 )
 
-func (s *StateManager) hydrateFavorites() error {
-	// Get all users
-	users, err := s.getUsers()
-	if err != nil {
-		return err
-	}
-
+func (s *StateManager) hydrateFavorites(users []user) error {
 	s.Mu.Lock()
 	defer s.Mu.Unlock()
 

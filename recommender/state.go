@@ -7,11 +7,12 @@ import (
 )
 
 type StateManager struct {
-	Mu            sync.RWMutex
-	UserFavorites map[string]map[string]bool
-	APIKey        string
-	ServerURL     string
-	Namer         *CollectionNamer
+	Mu              sync.RWMutex
+	UserFavorites   map[string]map[string]bool
+	APIKey          string
+	ServerURL       string
+	Namer           *CollectionNamer
+	UserCollections map[string]*UserCollectionInfo
 }
 
 func NewStateManager(serverURL, apiKey string) *StateManager {
@@ -32,13 +33,23 @@ func (s *StateManager) Sync() error {
 	}
 	s.Namer = namer
 
+	// Get the users from Jellyfin
+	users, err := s.getUsers()
+	if err != nil {
+		return fmt.Errorf("failed to get users from Jellyfin: %w", err)
+	}
+
 	// Hydrate the map of user favorites
-	err = s.hydrateFavorites()
+	err = s.hydrateFavorites(users)
 	if err != nil {
 		return fmt.Errorf("failed to hydrate user favorites: %w", err)
 	}
 
 	// Reconcile any differences
+	err = s.reconcileCollections(users)
+	if err != nil {
+		return fmt.Errorf("failed to reconcile collections: %w", err)
+	}
 
 	return nil
 }

@@ -1,5 +1,10 @@
 package recommender
 
+type UserCollectionInfo struct {
+	CollectionID string
+	ItemIDs      map[string]bool
+}
+
 // User represents a Jellyfin user account
 type user struct {
 	ID   string `json:"Id"`

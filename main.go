@@ -31,10 +31,5 @@ func main() {
 		log.Fatal("Something went wrong hydrating favorites: %w", err)
 	}
 
-	// Check the playlist for user favorites, resolve any discrepancies (both favorites that don't exist, and items that exist which are not favorites)
-
-	// Start the WebSocket connection and listen for favorite changes
-
-	// If a user favorites or unfavorites, we check the map, if the action was a favorite and the item doesn't already exist, we add it. If the action
-	// is to unfavorite, we check to see if anyone else has it favorited, if not, then we remove it from the playlist.
+	// Start a WebSocket listener to handle new user favorites and items removed from user favorites
 }
