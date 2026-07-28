@@ -141,7 +141,8 @@ func (s *StateManager) createCollectionWithImage(name, userID, initialItemID str
 
 	imageBytes, contentType, err := s.getUserProfilePicture(userID)
 	if err != nil {
-		return "", err
+		fmt.Printf("Warning: failed to fetch profile picture for user %s, possibly it doesn't exist?: %v\n", userID, err)
+		return newID, nil
 	}
 
 	err = s.setCollectionImage(newID, imageBytes, contentType)
