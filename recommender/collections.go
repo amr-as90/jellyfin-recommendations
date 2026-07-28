@@ -1,8 +1,11 @@
 package recommender
 
 import (
+	"bytes"
 	"fmt"
+	"io"
 	"log"
+	"net/http"
 	"net/url"
 )
 
@@ -40,7 +43,7 @@ func (s *StateManager) reconcileCollections(users []user) error {
 			// Create collection if missing
 			if !exists {
 				firstItem := expectedSlice[0]
-				newID, err := s.createCollection(expectedName, firstItem)
+				newID, err := s.createCollectionWithImage(expectedName, user.ID, firstItem)
 				if err != nil {
 					log.Printf("Failed to create collection %q for user %s: %v", expectedName, user.Name, err)
 					continue
@@ -130,6 +133,25 @@ func (s *StateManager) getExistingCollections() (map[string]string, error) {
 	return collections, nil
 }
 
+func (s *StateManager) createCollectionWithImage(name, userID, initialItemID string) (string, error) {
+	newID, err := s.createCollection(name, initialItemID)
+	if err != nil {
+		return "", err
+	}
+
+	imageBytes, contentType, err := s.getUserProfilePicture(userID)
+	if err != nil {
+		return "", err
+	}
+
+	err = s.setCollectionImage(newID, imageBytes, contentType)
+	if err != nil {
+		return "", err
+	}
+
+	return newID, nil
+}
+
 func (s *StateManager) createCollection(name, initialItemID string) (string, error) {
 	if name == "" || initialItemID == "" {
 		return "", fmt.Errorf("collection name and initialItemID cannot be empty")
@@ -176,6 +198,62 @@ func (s *StateManager) removeItemFromCollection(collectionID, itemID string) err
 
 	if err := s.deleteJellyfin(endpoint); err != nil {
 		return fmt.Errorf("failed to remove item %s from collection %s: %w", itemID, collectionID, err)
+	}
+
+	return nil
+}
+
+func (s *StateManager) getUserProfilePicture(userID string) ([]byte, string, error) {
+	profilePictureURL := fmt.Sprintf("%s/Users/%s/Images/Primary", s.ServerURL, userID)
+
+	req, err := http.NewRequest(http.MethodGet, profilePictureURL, nil)
+	if err != nil {
+		return nil, "", err
+	}
+	req.Header.Set("X-Emby-Token", s.APIKey)
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil, "", err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, "", fmt.Errorf("avatar fetch returned HTTP %d", resp.StatusCode)
+	}
+
+	contentType := resp.Header.Get("Content-Type")
+	if contentType == "" {
+		contentType = "image/jpeg"
+	}
+
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, "", err
+	}
+
+	return data, contentType, nil
+}
+
+func (s *StateManager) setCollectionImage(itemID string, imageData []byte, contentType string) error {
+	endpoint := fmt.Sprintf("%s/Items/%s/Images/Primary", s.ServerURL, itemID)
+
+	req, err := http.NewRequest(http.MethodPost, endpoint, bytes.NewReader(imageData))
+	if err != nil {
+		return fmt.Errorf("failed to create POST image request: %w", err)
+	}
+
+	req.Header.Set("X-Emby-Token", s.APIKey)
+	req.Header.Set("Content-Type", contentType)
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return fmt.Errorf("POST image request failed: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		return fmt.Errorf("POST image returned status: %s", resp.Status)
 	}
 
 	return nil
